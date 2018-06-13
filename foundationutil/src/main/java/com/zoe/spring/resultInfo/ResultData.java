@@ -1,4 +1,4 @@
-package com.zoe.service.spring.resultInfo;
+package com.zoe.spring.resultInfo;
 
 import lombok.Data;
 

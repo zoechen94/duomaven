@@ -1,10 +1,11 @@
 package com.zoe.controller;
 
 
-import com.zoe.service.spring.resultInfo.ResultData;
-import com.zoe.service.spring.utils.FileUploadUtils;
+import com.zoe.spring.resultInfo.ResultData;
+import com.zoe.spring.utils.FileUploadUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,15 +28,15 @@ public class FileController {
      * @return
      * @throws IOException
      */
-    @PostMapping(value = "/upload")
+    @PostMapping(value = "/upload",consumes = "multipart/*", headers = "content-type=multipart/form-data")
     @ApiOperation(value = "上传")
-    public ResultData uploadFile(@RequestBody @RequestParam("file") MultipartFile file) throws IOException {
+    public ResultData uploadFile(@RequestBody @ApiParam("file") MultipartFile file) throws IOException {
         return ResultData.success(FileUploadUtils.uploadFile(file));
     }
 
     @PostMapping(value = "/batchUpload")
     @ApiOperation(value = "批量文件上传")
-    public ResultData batchUploadFile(@RequestBody@RequestParam("files")MultipartFile[] files) throws IOException {
+    public ResultData batchUploadFile(@RequestBody @ApiParam(value = "批量文件",required = true) MultipartFile[] files) throws IOException {
         List<MultipartFile> multipartFiles= Arrays.asList(files);
         StringBuffer sb=new StringBuffer();
         for(int i=0;i<files.length;i++){
@@ -44,15 +45,4 @@ public class FileController {
         return ResultData.success(sb.toString());
     }
 
-    @ApiOperation(value = "上传文件")
-    @RequestMapping(value="/uploadFile.do", method = RequestMethod.POST)
-    public ResultData uploadFile(HttpServletRequest request,@RequestParam("file") MultipartFile file){
-        String fileName = file.getOriginalFilename();
-        try {
-            FileUploadUtils.uploadFile(file);
-        } catch (Exception e) {
-            return ResultData.success("upload fail");
-        }
-        return ResultData.success(fileName);
-    }
 }

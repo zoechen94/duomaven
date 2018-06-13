@@ -1,7 +1,7 @@
 package com.zoe.controller;
 
 import com.zoe.common.MyException;
-import com.zoe.service.spring.resultInfo.ResultData;
+import com.zoe.spring.resultInfo.ResultData;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
