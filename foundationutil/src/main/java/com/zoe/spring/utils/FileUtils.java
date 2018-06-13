@@ -1,9 +1,9 @@
 package com.zoe.spring.utils;
 
-import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +37,13 @@ public class FileUtils {
             copyFile(source+f.getName(),target+f.getName());
         }
     }
+
+    /**
+     * 复制文件
+     * @param source
+     * @param target
+     * @throws IOException
+     */
     public static void copyFile(String source,String target) throws IOException {
         File oldFile=new File(source);
         File file=new File(target);
