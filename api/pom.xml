@@ -26,6 +26,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.35</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -159,5 +160,24 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <!--<resource>-->
+                <!--<directory>src/main/java</directory>-->
+                <!--<includes>-->
+                    <!--<include>**/*.properties</include>-->
+                    <!--<include>**/*.xml</include>-->
+                <!--</includes>-->
+                <!--<filtering>false</filtering>-->
+            <!--</resource>-->
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.properties</include>
+                    <include>*.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
     </build>
+
 </project>
