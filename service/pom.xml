@@ -22,6 +22,7 @@
             </dependency>
 
 
+
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
@@ -129,7 +130,12 @@
                 <artifactId>spring</artifactId>
             </dependency>
 
-    </dependencies>
+            <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        </dependencies>
    <build>
        <plugins>
            <plugin>
