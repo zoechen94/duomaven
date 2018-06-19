@@ -4,6 +4,8 @@ import com.zoe.entity.User;
 import com.zoe.entity.vo.UserVO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface UserMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -18,4 +20,6 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     UserVO selectByAccount(@Param("account")String account);
+
+    List<User> selectAll();
 }

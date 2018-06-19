@@ -106,4 +106,8 @@ on c.permission_id=e.id
 where account=#{account}
   </select>
 
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from user
+    </select>
+
 </mapper>

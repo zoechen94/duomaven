@@ -8,6 +8,7 @@ import com.zoe.service.*;
 import com.zoe.spring.resultInfo.ResultData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.hibernate.secure.spi.PermissibleAction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,5 +123,16 @@ public class SysBasicController {
     @ApiImplicitParam(name = "account",value = "账户名",dataType = "String",paramType = "query")
     public ResultData findByAccount(String account){
         return ResultData.success(sysUserService.selectByAccount(account));
+    }
+
+
+    @ApiOperation("查询所有用户")
+    @GetMapping("/selectAll")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page",value = "当前页数",dataType = "Integer",paramType = "query"),
+            @ApiImplicitParam(name = "size",value = "每页个数",dataType = "Integer",paramType = "query")
+    })
+    public ResultData selectAll(int page,int size){
+        return ResultData.success(sysUserService.getAll(page,size));
     }
 }
