@@ -4,7 +4,6 @@ import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -12,12 +11,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * Created by 陈亚兰 on 2018/6/19.
+ * 首先配置ShiroConfig类，Apache Shiro核心通过Filter来实现，就好像SpringMvc通过DispachServlet来控制一样
+ * 通过URL规则来进行过滤和权限检验，所以我们需要定义一系列关于URL的规则和访问权限
  */
 @Configuration
 public class ShiroConfig {
@@ -85,26 +85,36 @@ public class ShiroConfig {
      */
     @Bean(name = "shiroFilter")
     public ShiroFilterFactoryBean shiroFilterFactoryBean() {
+        System.out.println("\nShiroConfiguration.shirFilter开始\n");
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager());
 
-        Map<String, Filter> filters = new LinkedHashMap<String, Filter>();
-        LogoutFilter logoutFilter = new LogoutFilter();
-        logoutFilter.setRedirectUrl("/login");
-//        filters.put("logout",null);
-        shiroFilterFactoryBean.setFilters(filters);
+        //拦截器
+        Map<String, String> filters = new LinkedHashMap<String, String>();
+        //配置不会被拦截的链接，顺序判断 anno所有url都可以匿名访问
+        filters.put("/static/**","anon");
+        filters.put("/swagger-ui.html", "anon");
+        filters.put("/v2/api-docs","anon");
+        filters.put("/swagger-resources", "anon");
+        filters.put("/webjars/springfox-swagger-ui/**", "anon");
+        filters.put("/sys/selectAll","roles[超级管理员,管理员]");
+        filters.put("/sys/findByAccount","perms[test3]");
 
-        Map<String, String> filterChainDefinitionManager = new LinkedHashMap<String, String>();
-        filterChainDefinitionManager.put("/logout", "logout");
-        filterChainDefinitionManager.put("/sys/findByAccount", "authc,roles[ROLE_USER]");
-        filterChainDefinitionManager.put("/events/**", "authc,roles[ROLE_ADMIN]");
-//        filterChainDefinitionManager.put("/user/edit/**", "authc,perms[user:edit]");// 这里为了测试，固定写死的值，也可以从数据库或其他配置中读取
-        filterChainDefinitionManager.put("/**", "anon");
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionManager);
+        //配置退出过滤器
+        filters.put("/user/logout","logout");
+        //过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了
+        //authc:所有url都必须认证通过才可以访问;
+        filters.put("/**", "authc");
+        //如果不设置会自动寻找Web工程根目录下的/login.jsp页面
+        shiroFilterFactoryBean.setLoginUrl("/user/login");
 
+        shiroFilterFactoryBean.setSuccessUrl("/index");
 
-        shiroFilterFactoryBean.setSuccessUrl("/");
-        shiroFilterFactoryBean.setUnauthorizedUrl("/403");
+        //未授权页面
+        shiroFilterFactoryBean.setUnauthorizedUrl("/error/he");
+
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filters);
+        System.out.println("\nShiroConfiguration.shirFilter结束\n");
         return shiroFilterFactoryBean;
     }
 

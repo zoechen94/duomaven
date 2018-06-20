@@ -14,6 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ErrorController {
     @GetMapping("/he")
     public ResultData getError(){
-        throw new MyException("健康的");
+        throw new MyException("未经授权");
     }
 }

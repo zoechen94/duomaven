@@ -12,10 +12,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.hibernate.secure.spi.PermissibleAction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
@@ -129,10 +126,11 @@ public class SysBasicController {
     @ApiOperation("查询所有用户")
     @GetMapping("/selectAll")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "page",value = "当前页数",dataType = "Integer",paramType = "query"),
-            @ApiImplicitParam(name = "size",value = "每页个数",dataType = "Integer",paramType = "query")
+            @ApiImplicitParam(name = "page",value = "当前页数",defaultValue = "1",dataType = "Integer",paramType = "query"),
+            @ApiImplicitParam(name = "size",value = "每页个数",defaultValue = "10",dataType = "Integer",paramType = "query")
     })
-    public ResultData selectAll(int page,int size){
+    public ResultData selectAll(@RequestParam(defaultValue = "1") int page,
+                                @RequestParam(defaultValue = "10") int size){
         return ResultData.success(sysUserService.getAll(page,size));
     }
 }
