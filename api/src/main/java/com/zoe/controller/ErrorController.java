@@ -2,9 +2,13 @@ package com.zoe.controller;
 
 import com.zoe.common.MyException;
 import com.zoe.spring.resultInfo.ResultData;
+import org.assertj.core.util.diff.myers.MyersDiff;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by 陈亚兰 on 2018/6/12.
@@ -16,4 +20,10 @@ public class ErrorController {
     public ResultData getError(){
         throw new MyException("未经授权");
     }
+
+    @GetMapping
+    public ResultData getErrorGet(){
+        throw new MyException("未经授权且方法不对");
+    }
+
 }

@@ -29,10 +29,11 @@ public class UserController {
     @PostMapping("/login")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "account",value = "账号",paramType = "query",dataType = "String"),
-            @ApiImplicitParam(name = "password",value = "密码",paramType = "query",dataType = "String")
+            @ApiImplicitParam(name = "password",value = "密码",paramType = "query",dataType = "String"),
+            @ApiImplicitParam(name = "remember",value = "是否记住我",paramType = "query",dataType = "Boolean")
     })
-    public ResultData login(String account,String password,@ApiIgnore RedirectAttributes redirectAttributes){
-        UsernamePasswordToken token = new UsernamePasswordToken(account,password);
+    public ResultData login(String account,String password,Boolean remember,@ApiIgnore RedirectAttributes redirectAttributes){
+        UsernamePasswordToken token = new UsernamePasswordToken(account,password,remember);
         org.apache.shiro.subject.Subject currentUser = SecurityUtils.getSubject();
         try {
             //在调用了login方法后,SecurityManager会收到AuthenticationToken,并将其发送给已配置的Realm执行必须的认证检查
