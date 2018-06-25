@@ -1,6 +1,7 @@
 package com.zoe.config;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zoe.spring.resultInfo.ResultData;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -19,16 +20,17 @@ public class AjaxPermissionsAuthorizationFilter extends FormAuthenticationFilter
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("returnCode", 404);
-        jsonObject.put("returnMsg", "未登录");
+        JSONObject data=new JSONObject();
+        data.put("code",404);
+        data.put("message","failure");
+        data.put("result","未登录");
         PrintWriter out = null;
         HttpServletResponse res = (HttpServletResponse) response;
         try {
             res.setCharacterEncoding("UTF-8");
             res.setContentType("application/json");
             out = response.getWriter();
-            out.println(jsonObject);
+            out.println(data);
         } catch (Exception e) {
         } finally {
             if (null != out) {

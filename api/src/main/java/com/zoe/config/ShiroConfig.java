@@ -132,7 +132,6 @@ public class ShiroConfig {
          * authc：该过滤器下的页面必须验证后才能访问,它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter
          */
         shiroFilterFactoryBean.setSecurityManager(securityManager());
-
         //拦截器
         Map<String, String> filters = new LinkedHashMap<String, String>();
         filters.put("/","anon");
