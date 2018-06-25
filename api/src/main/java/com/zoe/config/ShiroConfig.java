@@ -148,16 +148,9 @@ public class ShiroConfig {
         filters.put("/sys/selectAll","roles[超级管-理员]");//如果是roles[超级管理员,管理员]用户要同时满足所有角色
         filters.put("/sys/selectAll","roles[管理员]");
         filters.put("/sys/findByAccount","perms[test3]");
-//        配置退出过滤器
-        filters.put("/user/logout","logout");
-//        过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了
-//        authc:所有url都必须认证通过才可以访问;
-
-        //如果不设置会自动寻找Web工程根目录下的/login.jsp页面
-        shiroFilterFactoryBean.setLoginUrl("/user/login");
-
-        shiroFilterFactoryBean.setSuccessUrl("/index");
-
+        filters.put("/user/login","anon");
+////        配置退出过滤器
+//        filters.put("/user/logout","logout");
         //未授权页面
         shiroFilterFactoryBean.setUnauthorizedUrl("/error/he");
         filters.put("/**", "authc");
