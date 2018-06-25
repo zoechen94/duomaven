@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
+import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -118,40 +119,90 @@ public class ShiroConfig {
      */
     @Bean(name = "shiroFilter")
     public ShiroFilterFactoryBean shiroFilterFactoryBean() {
-        System.out.println("\nShiroConfiguration.shirFilter开始\n");
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        //Shiro的核心安全接口,这个属性是必须的
         shiroFilterFactoryBean.setSecurityManager(securityManager());
-
-        //拦截器
-        Map<String, String> filters = new LinkedHashMap<String, String>();
-        //配置不会被拦截的链接，顺序判断 anno所有url都可以匿名访问
-        filters.put("/**","user");
+        Map<String, Filter> filterMap = new LinkedHashMap<>();
+        filterMap.put("authc", new AjaxPermissionsAuthorizationFilter());
+        shiroFilterFactoryBean.setFilters(filterMap);
+        /*定义shiro过滤链  Map结构
+         * Map中key(xml中是指value值)的第一个'/'代表的路径是相对于HttpServletRequest.getContextPath()的值来的
+         * anon：它对应的过滤器里面是空的,什么都没做,这里.do和.jsp后面的*表示参数,比方说login.jsp?main这种
+         * authc：该过滤器下的页面必须验证后才能访问,它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter
+         */
+        Map<String, String> filters = new LinkedHashMap<>();
+         /* 过滤链定义，从上向下顺序执行，一般将 / ** 放在最为下边:这是一个坑呢，一不小心代码就不好使了;
+          authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问 */
+//        filters.put("/", "anon");
+//        filters.put("/swagger-ui.html","anon");
+//        filters.put("/swagger/**","anon");
+//        filters.put("/webjars/**", "anon");
+//        filters.put("/swagger-resources/**","anon");
+//        filters.put("/v2/**","anon");
+//        filters.put("/static/**", "anon");
+//        filters.put("/login/auth", "anon");
+//        filters.put("/login/logout", "anon");
+//        filters.put("/error", "anon");
+//        filters.put("/**", "authc");
+        filters.put("/","anon");
         filters.put("/swagger-ui.html","anon");
-        filters.put("/static/**", "anon");
         filters.put("/swagger/**","anon");
         filters.put("/webjars/**", "anon");
         filters.put("/swagger-resources/**","anon");
         filters.put("/v2/**","anon");
+        filters.put("/doc.html","anon");
 
+        //配置不会被拦截的链接，顺序判断 anon所有url都可以匿名访问
+//        filters.put("/**","user");//记住我之后，所有url都可以访问，这显然在实际开发中是不可取的
+        filters.put("/static/**", "anon");
         filters.put("/sys/selectAll","roles[超级管-理员]");//如果是roles[超级管理员,管理员]用户要同时满足所有角色
         filters.put("/sys/selectAll","roles[管理员]");
         filters.put("/sys/findByAccount","perms[test3]");
+        filters.put("/**", "authc");
         //配置退出过滤器
         filters.put("/user/logout","logout");
+        shiroFilterFactoryBean.setLoginUrl("/user/login");
+        shiroFilterFactoryBean.setSuccessUrl("/index");
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filters);
+        return shiroFilterFactoryBean;
+        
+        
+//        System.out.println("\nShiroConfiguration.shirFilter开始\n");
+//        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+//        shiroFilterFactoryBean.setSecurityManager(securityManager());
+//
+//        //拦截器
+//        Map<String, String> filters = new LinkedHashMap<String, String>();
+//        filters.put("/","anon");
+//        filters.put("/swagger-ui.html","anon");
+//        filters.put("/swagger/**","anon");
+//        filters.put("/webjars/**", "anon");
+//        filters.put("/swagger-resources/**","anon");
+//        filters.put("/v2/**","anon");
+//        filters.put("/doc.html","anon");
+//
+//        //配置不会被拦截的链接，顺序判断 anon所有url都可以匿名访问
+////        filters.put("/**","user");//记住我之后，所有url都可以访问，这显然在实际开发中是不可取的
+//        filters.put("/static/**", "anon");
+//        filters.put("/sys/selectAll","roles[超级管-理员]");//如果是roles[超级管理员,管理员]用户要同时满足所有角色
+//        filters.put("/sys/selectAll","roles[管理员]");
+//        filters.put("/sys/findByAccount","perms[test3]");
+        //配置退出过滤器
+//        filters.put("/user/logout","logout");
         //过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了
         //authc:所有url都必须认证通过才可以访问;
 
-        //如果不设置会自动寻找Web工程根目录下的/login.jsp页面
-        shiroFilterFactoryBean.setLoginUrl("/user/login");
-
-        shiroFilterFactoryBean.setSuccessUrl("/index");
-
-        //未授权页面
-        shiroFilterFactoryBean.setUnauthorizedUrl("/error/he");
-        filters.put("/**", "authc");
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(filters);
-        System.out.println("\nShiroConfiguration.shirFilter结束\n");
-        return shiroFilterFactoryBean;
+//        //如果不设置会自动寻找Web工程根目录下的/login.jsp页面
+//        shiroFilterFactoryBean.setLoginUrl("/user/login");
+//
+//        shiroFilterFactoryBean.setSuccessUrl("/index");
+//
+//        //未授权页面
+//        shiroFilterFactoryBean.setUnauthorizedUrl("/error/he");
+//        filters.put("/**", "authc");
+//        shiroFilterFactoryBean.setFilterChainDefinitionMap(filters);
+//        System.out.println("\nShiroConfiguration.shirFilter结束\n");
+//        return shiroFilterFactoryBean;
     }
 
     /**
