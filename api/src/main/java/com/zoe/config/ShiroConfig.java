@@ -84,7 +84,7 @@ public class ShiroConfig {
         //这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
         SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
         //<!-- 记住我cookie生效时间30天 ,单位秒;-->
-        simpleCookie.setMaxAge(259200);
+        simpleCookie.setMaxAge(3600);//1小时
         return simpleCookie;
     }
 
@@ -134,7 +134,6 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager());
         //拦截器
         Map<String, String> filters = new LinkedHashMap<String, String>();
-        filters.put("/","anon");
         filters.put("/swagger-ui.html","anon");
         filters.put("/swagger/**","anon");
         filters.put("/webjars/**", "anon");
@@ -143,14 +142,9 @@ public class ShiroConfig {
         filters.put("/doc.html","anon");
 
         //配置不会被拦截的链接，顺序判断 anon所有url都可以匿名访问
-//        filters.put("/**","user");//记住我之后，所有url都可以访问，这显然在实际开发中是不可取的
         filters.put("/static/**", "anon");
-        filters.put("/sys/selectAll","roles[超级管-理员]");//如果是roles[超级管理员,管理员]用户要同时满足所有角色
-        filters.put("/sys/selectAll","roles[管理员]");
-        filters.put("/sys/findByAccount","perms[test3]");
+//        filters.put("/sys/findByAccount","perms[test3]");
         filters.put("/user/login","anon");
-////        配置退出过滤器
-//        filters.put("/user/logout","logout");
         //未授权页面
         shiroFilterFactoryBean.setUnauthorizedUrl("/error/he");
         filters.put("/**", "authc");

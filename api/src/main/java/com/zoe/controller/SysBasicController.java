@@ -10,6 +10,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.hibernate.secure.spi.PermissibleAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -117,12 +120,15 @@ public class SysBasicController {
 
     @ApiOperation("根据账户名查询")
     @GetMapping("/findByAccount")
+    @RequiresUser
     @ApiImplicitParam(name = "account",value = "账户名",dataType = "String",paramType = "query")
     public ResultData findByAccount(String account){
         return ResultData.success(sysUserService.selectByAccount(account));
     }
 
 
+    @RequiresRoles(value = {"管理员","超级管-理员"},logical = Logical.OR)
+    @RequiresUser
     @ApiOperation("查询所有用户")
     @GetMapping("/selectAll")
     @ApiImplicitParams({
