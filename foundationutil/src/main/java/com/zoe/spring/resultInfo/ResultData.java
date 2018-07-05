@@ -19,6 +19,7 @@ public class ResultData<T> implements Serializable {
     private String message;
     private int code;
     private T result;
+    private String sessionId;
 
     public static <T> ResultData<T> success(T t){
         ResultData<T> resultData=new ResultData<T>();
@@ -27,7 +28,14 @@ public class ResultData<T> implements Serializable {
         resultData.setResult(t);
         return resultData;
     }
-
+    public static <T> ResultData<T> loginSuccess(T t,String sessionId){
+        ResultData<T> resultData=new ResultData<T>();
+        resultData.setMessage(SUCCESS_MESSAGE);
+        resultData.setCode(SUCCESS_CODE);
+        resultData.setResult(t);
+        resultData.setSessionId(sessionId);
+        return resultData;
+    }
     public static <T> ResultData<T> error(T t){
         ResultData<T> resultData=new ResultData<T>();
         resultData.setResult(t);

@@ -27,11 +27,7 @@ import java.util.Map;
 public class ShiroConfig {
 
 
-    /**
-     * LifecycleBeanPostProcessor，这是个DestructionAwareBeanPostProcessor的子类，
-     * 负责org.apache.shiro.util.Initializable类型bean的生命周期的，初始化和销毁。
-     * 主要是AuthorizingRealm类的子类，以及EhCacheManager类。
-     */
+    //shiro管理生命周期的东西
     @Bean(name = "lifecycleBeanPostProcessor")
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
@@ -80,7 +76,6 @@ public class ShiroConfig {
 
     @Bean
     public SimpleCookie rememberMeCookie(){
-        //System.out.println("ShiroConfiguration.rememberMeCookie()");
         //这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
         SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
         //<!-- 记住我cookie生效时间30天 ,单位秒;-->
@@ -95,7 +90,6 @@ public class ShiroConfig {
      */
     @Bean
     public CookieRememberMeManager rememberMeManager(){
-        //System.out.println("ShiroConfiguration.rememberMeManager()");
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
         cookieRememberMeManager.setCookie(rememberMeCookie());
         //rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度(128 256 512 位)
@@ -113,15 +107,11 @@ public class ShiroConfig {
 
 
 
-    /**
-     * ShiroFilterFactoryBean，是个factorybean，为了生成ShiroFilter。
-     * 它主要保持了三项数据，securityManager，filters，filterChainDefinitionManager。
-     */
+   //过滤器和映射路径的配置
     @Bean(name = "shiroFilter")
     public ShiroFilterFactoryBean shiroFilterFactoryBean() {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-        //Shiro的核心安全接口,这个属性是必须的
-        shiroFilterFactoryBean.setSecurityManager(securityManager());
+        shiroFilterFactoryBean.setSecurityManager(securityManager());   //Shiro的核心安全接口,这个属性是必须的
         //filtersMap不写就出不来swagger
         Map<String, Filter> filterMap = new LinkedHashMap<>();
         filterMap.put("authc", new AjaxPermissionsAuthorizationFilter());
@@ -131,7 +121,6 @@ public class ShiroConfig {
          * anon：它对应的过滤器里面是空的,什么都没做,这里.do和.jsp后面的*表示参数,比方说login.jsp?main这种
          * authc：该过滤器下的页面必须验证后才能访问,它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter
          */
-        shiroFilterFactoryBean.setSecurityManager(securityManager());
         //拦截器
         Map<String, String> filters = new LinkedHashMap<String, String>();
         filters.put("/swagger-ui.html","anon");
@@ -174,4 +163,6 @@ public class ShiroConfig {
         aASA.setSecurityManager(securityManager());
         return aASA;
     }
+
+
 }

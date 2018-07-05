@@ -8,12 +8,12 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 public class PassWordUtils {
 
-    public static String Md5PassWord(String password,String salt){
+    public static String md5PassWord(String password,String salt){
         return DigestUtils.md5Hex(password+salt);
     }
 
     public static boolean equals(String password,String salt,String passDB){
-        return Md5PassWord(password,salt).equals(passDB);
+        return md5PassWord(password,salt).equals(passDB);
     }
 
 }

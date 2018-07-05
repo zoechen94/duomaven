@@ -6,11 +6,13 @@
         <result column="password" property="password" jdbcType="VARCHAR"/>
         <result column="username" property="username" jdbcType="VARCHAR"/>
         <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="salt" property="salt" jdbcType="VARCHAR"></result>
     </resultMap>
     <resultMap id="accountResultVO" type="com.zoe.entity.vo.UserVO">
         <id column="user_id" property="userId" jdbcType="BIGINT"></id>
         <result column="username" property="username" jdbcType="VARCHAR"/>
         <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="salt" property="salt" jdbcType="VARCHAR"/>
         <collection property="sysPermissions" ofType="com.zoe.entity.SysPermission">
             <id column="permission_id" property="id"/>
             <result column="permission_en" property="permissionEn"></result>
@@ -24,7 +26,7 @@
         </collection>
     </resultMap>
     <sql id="Base_Column_List">
-    id, password, username, account
+    id, password, username, account,salt
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
         select
@@ -97,7 +99,7 @@
   </update>
 
     <select id="selectByAccount" resultMap="accountResultVO">
-select a.id as user_id,a.account,a.username,d.role_name,d.`level`,e.id as permission_id,d.id as role_id,e.url,e.permission_en,e.permission_cn from user a LEFT JOIN sys_user_role b on
+select a.id as user_id,a.account,a.salt,a.username,d.role_name,d.`level`,e.id as permission_id,d.id as role_id,e.url,e.permission_en,e.permission_cn from user a LEFT JOIN sys_user_role b on
 a.id=b.user_id LEFT JOIN sys_role_permission c
 on b.role_id=c.role_id left JOIN sys_role d
 on b.role_id=d.id

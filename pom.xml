@@ -14,6 +14,7 @@
         <module>foundationutil</module>
         <module>api</module>
         <module>service</module>
+        <module>api-wx</module>
     </modules>
     <!-- maven依赖-->
     <dependencyManagement>

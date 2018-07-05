@@ -4,7 +4,6 @@ import com.zoe.entity.SysPermission;
 import com.zoe.entity.SysRole;
 import lombok.Data;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,6 +14,7 @@ public class UserVO {
     private Long userId;
     private String account;
     private String username;
+    private String salt;
     private Set<SysPermission> sysPermissions;
     private Set<SysRole> sysRoles;
 }
