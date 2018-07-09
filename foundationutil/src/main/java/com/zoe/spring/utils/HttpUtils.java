@@ -64,6 +64,8 @@ public class HttpUtils {
         httpURLConnection.setRequestMethod("POST"); // 设置请求方式
         httpURLConnection.setRequestProperty("charset", "utf-8");
 
+
+
         System.out.println(httpURLConnection.getURL().toString());
 
         PrintWriter pw = new PrintWriter(new BufferedOutputStream(httpURLConnection.getOutputStream()));

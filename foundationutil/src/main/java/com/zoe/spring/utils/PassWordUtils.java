@@ -16,4 +16,11 @@ public class PassWordUtils {
         return md5PassWord(password,salt).equals(passDB);
     }
 
+    public static String md5(String ... strings){
+        StringBuffer sb=new StringBuffer();
+        for (int i = 0; i < strings.length; i++) {
+            sb.append(strings[i]);
+        }
+        return DigestUtils.md5Hex(sb.toString());
+    }
 }
