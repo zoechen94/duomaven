@@ -1,7 +1,7 @@
 package com.zoe.controller;
 
 import com.zoe.entity.User;
-import com.zoe.spring.resultInfo.ResultData;
+import com.util.spring.resultInfo.ResultData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

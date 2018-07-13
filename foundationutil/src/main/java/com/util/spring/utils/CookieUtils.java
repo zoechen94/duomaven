@@ -1,4 +1,4 @@
-package com.zoe.spring.utils;
+package com.util.spring.utils;
 
 import javax.servlet.http.Cookie;
 

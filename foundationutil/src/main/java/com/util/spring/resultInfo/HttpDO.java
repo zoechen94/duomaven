@@ -1,15 +1,13 @@
-package com.andlinks.mybatis.entity.httpdo;
+package com.util.spring.resultInfo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.List;
 
 /**
- * Created by 陈亚兰 on 2018/5/23.
+ * Created by 陈亚兰 on 2018/6/13.
  */
-@Setter
-@Getter
+@Data
 public class HttpDO {
     private String code;
     private String msg;

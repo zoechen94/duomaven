@@ -1,4 +1,4 @@
-package com.zoe.spring.test;
+package com.util.spring.test;
 
 import lombok.Data;
 

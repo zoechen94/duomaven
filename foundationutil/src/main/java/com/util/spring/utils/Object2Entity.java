@@ -1,9 +1,9 @@
-package com.zoe.spring.utils;
+package com.util.spring.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.zoe.spring.test.ObjectInfo;
-import com.zoe.spring.test.PatentInfo;
+import com.util.spring.test.ObjectInfo;
+import com.util.spring.test.PatentInfo;
 
 import java.util.List;
 

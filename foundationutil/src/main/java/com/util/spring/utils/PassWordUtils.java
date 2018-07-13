@@ -1,4 +1,4 @@
-package com.zoe.spring.utils;
+package com.util.spring.utils;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -16,6 +16,11 @@ public class PassWordUtils {
         return md5PassWord(password,salt).equals(passDB);
     }
 
+    /**
+     * 所有形参的加密
+     * @param strings
+     * @return
+     */
     public static String md5(String ... strings){
         StringBuffer sb=new StringBuffer();
         for (int i = 0; i < strings.length; i++) {

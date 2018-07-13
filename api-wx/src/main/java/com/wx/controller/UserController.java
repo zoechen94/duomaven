@@ -1,10 +1,10 @@
 package com.wx.controller;
 
-import com.zoe.spring.resultInfo.ResultData;
-import com.zoe.spring.utils.DateUtil;
-import com.zoe.spring.utils.HttpUtils;
-import com.zoe.spring.utils.PassWordUtils;
-import com.zoe.spring.utils.VerifyCodeUtils;
+import com.util.spring.resultInfo.ResultData;
+import com.util.spring.utils.DateUtil;
+import com.util.spring.utils.HttpUtils;
+import com.util.spring.utils.PassWordUtils;
+import com.util.spring.utils.VerifyCodeUtils;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

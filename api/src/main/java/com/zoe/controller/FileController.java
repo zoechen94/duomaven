@@ -1,15 +1,14 @@
 package com.zoe.controller;
 
 
-import com.zoe.spring.resultInfo.ResultData;
-import com.zoe.spring.utils.FileUploadUtils;
+import com.util.spring.resultInfo.ResultData;
+import com.util.spring.utils.FileUploadUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;

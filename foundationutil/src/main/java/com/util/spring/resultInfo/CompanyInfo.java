@@ -1,4 +1,4 @@
-package com.zoe.spring.resultInfo;
+package com.util.spring.resultInfo;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;

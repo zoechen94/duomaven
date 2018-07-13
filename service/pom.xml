@@ -118,16 +118,9 @@
                 <artifactId>jackson-databind</artifactId>
             </dependency>
 
-
             <dependency>
                 <groupId>com.zoe</groupId>
                 <artifactId>foundation-util</artifactId>
-            </dependency>
-
-
-            <dependency>
-                <groupId>com.zoe</groupId>
-                <artifactId>spring</artifactId>
             </dependency>
 
             <dependency>
