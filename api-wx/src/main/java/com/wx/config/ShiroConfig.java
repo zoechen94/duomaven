@@ -92,9 +92,9 @@ public class ShiroConfig {
         filterFactoryBean.setFilters(filterMap);
         /**#################################*/
         // 配置登陆的地址
-//        filterFactoryBean.setLoginUrl("/test");// 未登录时候跳转URL,如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
-//        filterFactoryBean.setSuccessUrl("/welcome.do");// 成功后欢迎页面
-//        filterFactoryBean.setUnauthorizedUrl("/403.do");// 未认证页面
+        filterFactoryBean.setLoginUrl("/test");// 未登录时候跳转URL,如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
+        filterFactoryBean.setSuccessUrl("/welcome.do");// 成功后欢迎页面
+        filterFactoryBean.setUnauthorizedUrl("/403.do");// 未认证页面
         // 配置拦截地址和拦截器
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();// 必须使用LinkedHashMap,因为拦截有先后顺序
         // authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
@@ -113,7 +113,6 @@ public class ShiroConfig {
         // 权限配置示例,这里的配置理论来自数据库查询
 //        filterChainDefinitionMap.put("/user/**", "roles[ROLE_USER],perms[query]");// /user/下面的需要ROLE_USER角色或者query权限才能访问
         filterChainDefinitionMap.put("/user/**","perms[delete-user]");
-        filterChainDefinitionMap.put("/admin/**", "perms[ROLE_ADMIN]");// /admin/下面的所有需要ROLE_ADMIN的角色才能访问
 
         // 剩下的其他资源地址全部需要用户认证后才能访问
         filterChainDefinitionMap.put("/**", "authc");

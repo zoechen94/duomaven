@@ -5,8 +5,11 @@ import com.google.gson.reflect.TypeToken;
 import com.util.spring.resultInfo.ResultData;
 import com.util.spring.utils.HttpUtils;
 import com.wx.entity.WXJSON;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +32,8 @@ public class LoginController {
     @Value("${wx.secret}")
     private String secret;
 
-    @GetMapping
+    @GetMapping("/login")
+    @ApiImplicitParam(name = "code",value = "code",dataType = "String",paramType = "query")
     public ResultData login(String code) throws Exception {
          String url="https://api.weixin.qq.com/sns/jscode2session?appid="+appID+"&secret="+secret+"&js_code="+code+"&grant_type=authorization_code";
          WXJSON wxjson=HttpUtils.get(url,new TypeToken<WXJSON>(){});
@@ -37,14 +41,20 @@ public class LoginController {
     }
 
     @GetMapping("/test")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "loginName",value = "账户",dataType = "String",paramType = "query"),
+            @ApiImplicitParam(name = "password",value = "密码",dataType = "String",paramType = "query")
+    })
     public ResultData loginTest(String loginName,String password){
         try {
             // 创建shiro需要的token
             UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginName, password.toCharArray());
-            usernamePasswordToken.setRememberMe(true);// 记住
-
+            Subject current=SecurityUtils.getSubject();
+//            usernamePasswordToken.setRememberMe(true);// 记住
             try {
-                SecurityUtils.getSubject().login(usernamePasswordToken);
+                logger.info("开始验证["+loginName+"]");
+                current.login(usernamePasswordToken);
+                logger.info("验证结束["+loginName+"]");
             } catch (UnknownAccountException uae) {
                 logger.info("对用户[" + loginName + "]进行登录验证..验证未通过,未知账户");
                 return ResultData.error("对用户[" + loginName + "]进行登录验证..验证未通过,未知账户");
@@ -64,7 +74,10 @@ public class LoginController {
                 ae.printStackTrace();
                 return ResultData.error("用户名或密码不正确");
             }
-            return ResultData.success("Login Success!");
+            if(current.isAuthenticated()){
+                return ResultData.success("Login Success!");
+            }
+            return null;
         } catch (Exception e) {
             return ResultData.error("登陆时候发生异常," + e.getMessage());
         }

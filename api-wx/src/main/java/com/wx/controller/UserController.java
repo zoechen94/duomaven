@@ -58,7 +58,7 @@ public class UserController {
         map.put("accountSid",account);
         int random= (int) ((Math.random()*9+1)*100000);
         content= String.format(content,random,5);
-        redisTemplate.opsForValue().set(iphone,random+"",timeout,TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(iphone,random+"",timeout,TimeUnit.SECONDS);//把验证码放在redis里存储
         map.put("smsContent", content);
         String timeStamp=DateUtil.date2StringNoKong(new Date());
         map.put("timestamp",timeStamp);
@@ -72,7 +72,6 @@ public class UserController {
     @GetMapping
     @ApiImplicitParam(name = "iphone",value = "手机号",defaultValue = "17374707239",dataType = "String",paramType = "query")
     public ResultData get(String iphone){
-        System.out.println(redisTemplate.opsForValue().get(iphone));
         if(redisTemplate.opsForValue().get(iphone)==null){
             return ResultData.success("已过期");
         }
