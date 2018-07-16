@@ -89,4 +89,8 @@
       #{item.url,jdbcType=VARCHAR})
     </foreach>
   </insert>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select * from sys_permission
+  </select>
 </mapper>

@@ -88,14 +88,10 @@ public class LoginController {
         return "Hello Admin, From Server";
     }
 
-    @GetMapping("/welcome.do")
-    public String loginSuccess() {
-        return "welcome";
-    }
 
     @GetMapping("/403.do")
     public Object error403(HttpServletResponse response) {
-        response.setStatus(403);
+        response.setStatus(401);
         JSONObject object = new JSONObject();
         object.put("message", "用户权限不够");
         return object;

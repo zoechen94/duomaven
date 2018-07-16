@@ -1,5 +1,7 @@
 package com.zoe.service;
 
+import com.zoe.entity.SysPermission;
+
 import java.security.Permission;
 import java.util.List;
 
@@ -8,4 +10,6 @@ import java.util.List;
  */
 public interface SysPermissionService {
     int insertBatch(List<Permission> permissionList);
+    List<SysPermission> selectAll();
+    SysPermission findOne(Long id);
 }

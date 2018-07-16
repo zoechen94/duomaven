@@ -2,8 +2,11 @@ package com.wx.config;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,12 +20,34 @@ import java.util.Map;
  **/
 @Configuration
 public class ShiroConfig {
+
     /**
-     * ehcache缓存方案<br/>
-     * 简单的缓存,后续可更换为redis缓存,通过自己实现shiro的CacheManager接口和Cache接口
-     *
-     * @return
+     * DefaultAdvisorAutoProxyCreator，Spring的一个bean，由Advisor决定对哪些类的方法进行AOP代理。
      */
+    @Bean
+    @ConditionalOnMissingBean
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator defaultAAP = new DefaultAdvisorAutoProxyCreator();
+        defaultAAP.setProxyTargetClass(true);
+        return defaultAAP;
+    }
+
+    /**
+     * AuthorizationAttributeSourceAdvisor，shiro里实现的Advisor类，
+     * 内部使用AopAllianceAnnotationsAuthorizingMethodInterceptor来拦截用以下注解的方法。
+     */
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor() {
+        AuthorizationAttributeSourceAdvisor aASA = new AuthorizationAttributeSourceAdvisor();
+        aASA.setSecurityManager(defaultWebSecurityManager());
+        return aASA;
+    }
+        /**
+         * ehcache缓存方案<br/>
+         * 简单的缓存,后续可更换为redis缓存,通过自己实现shiro的CacheManager接口和Cache接口
+         *
+         * @return
+         */
     @Bean
     public EhCacheManager shiroEhCacheManager() {
         EhCacheManager cacheManager = new EhCacheManager();
@@ -94,7 +119,7 @@ public class ShiroConfig {
         // 配置登陆的地址
         filterFactoryBean.setLoginUrl("/test");// 未登录时候跳转URL,如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
         filterFactoryBean.setSuccessUrl("/welcome.do");// 成功后欢迎页面
-        filterFactoryBean.setUnauthorizedUrl("/403.do");// 未认证页面
+        filterFactoryBean.setUnauthorizedUrl("/unAuth");// 未认证页面,未授权页面
         // 配置拦截地址和拦截器
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();// 必须使用LinkedHashMap,因为拦截有先后顺序
         // authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
@@ -113,7 +138,7 @@ public class ShiroConfig {
         // 权限配置示例,这里的配置理论来自数据库查询
 //        filterChainDefinitionMap.put("/user/**", "roles[ROLE_USER],perms[query]");// /user/下面的需要ROLE_USER角色或者query权限才能访问
         filterChainDefinitionMap.put("/user/**","perms[delete-user]");
-
+//        filterChainDefinitionMap.put("/permission/**","roles[管理员]");
         // 剩下的其他资源地址全部需要用户认证后才能访问
         filterChainDefinitionMap.put("/**", "authc");
         filterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

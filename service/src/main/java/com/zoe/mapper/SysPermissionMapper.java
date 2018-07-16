@@ -19,4 +19,7 @@ public interface SysPermissionMapper {
     int updateByPrimaryKey(SysPermission record);
 
     int insertBatch(List<Permission> list);
+
+    List<SysPermission> selectAll();
+
 }

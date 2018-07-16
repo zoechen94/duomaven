@@ -1,5 +1,6 @@
 package com.zoe.service.impl;
 
+import com.zoe.entity.SysPermission;
 import com.zoe.mapper.SysPermissionMapper;
 import com.zoe.service.SysPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,4 +20,16 @@ public class SysPermissionServiceImpl implements SysPermissionService {
     public int insertBatch(List<Permission> permissionList) {
         return sysPermissionMapper.insertBatch(permissionList);
     }
+
+    @Override
+    public List<SysPermission> selectAll() {
+        return sysPermissionMapper.selectAll();
+    }
+
+    @Override
+    public SysPermission findOne(Long id) {
+        return sysPermissionMapper.selectByPrimaryKey(id);
+    }
+
+
 }

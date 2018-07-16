@@ -1,6 +1,7 @@
 package com.wx.config;
 
 import com.zoe.entity.SysPermission;
+import com.zoe.entity.SysRole;
 import com.zoe.entity.vo.UserVO;
 import com.zoe.service.SysUserService;
 import org.apache.commons.lang.StringUtils;
@@ -51,6 +52,12 @@ public class ShiroRealm extends AuthorizingRealm {
                 info.addStringPermission(n.getPermissionEn());
             });
         }
+        Set<SysRole> sysRoles=user.getSysRoles();
+        if(sysRoles!=null&&!sysRoles.isEmpty()){
+            sysRoles.forEach(n->info.addRole(n.getRoleName()));
+        }
+        log.info("permissions:"+info.getStringPermissions()+"\troles:"+info.getRoles());
+
         //角色设置
         return info;
     }
@@ -75,7 +82,6 @@ public class ShiroRealm extends AuthorizingRealm {
                 //注意该对象的密码将会传递至后续步骤与前面登陆的Subject的密码进行比对
                 SimpleAuthenticationInfo authenticationInfo=new SimpleAuthenticationInfo(principal,token.getPassword(),getName());
                 return authenticationInfo;
-
             }
         }
         return null;

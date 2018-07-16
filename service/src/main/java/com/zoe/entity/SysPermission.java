@@ -1,6 +1,9 @@
 package com.zoe.entity;
 
-public class SysPermission {
+import java.io.Serializable;
+
+public class SysPermission implements Serializable {
+    private static final long serialVersionUID = -2726325902196359308L;
     private Long id;
 
     private String permissionCn;
