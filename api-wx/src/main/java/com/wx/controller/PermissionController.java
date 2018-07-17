@@ -5,7 +5,6 @@ import com.zoe.entity.SysPermission;
 import com.zoe.service.SysPermissionService;
 import io.swagger.annotations.ApiImplicitParam;
 import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,7 @@ public class PermissionController {
     @Autowired
     private SysPermissionService sysPermissionService;
 
-    @RequiresPermissions("delete-user")
+    @RequiresRoles(value={"管理员"})
     @GetMapping
     @Cacheable(value="thisRedis", key="'permission_123'")
     public ResultData getAllPermission(){

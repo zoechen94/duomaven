@@ -1,9 +1,7 @@
 package com.wx.config;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zoe.service.redis.UserTokenService;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -20,8 +18,6 @@ import java.io.PrintWriter;
  */
 @Component
 public class AjaxPermissionsAuthorizationFilter extends FormAuthenticationFilter {
-    @Autowired
-    private UserTokenService userTokenService;
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         JSONObject data=new JSONObject();

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -43,14 +44,15 @@ public class LoginController {
     @GetMapping("/test")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "loginName",value = "账户",dataType = "String",paramType = "query"),
-            @ApiImplicitParam(name = "password",value = "密码",dataType = "String",paramType = "query")
+            @ApiImplicitParam(name = "password",value = "密码",dataType = "String",paramType = "query"),
+            @ApiImplicitParam(name = "isRemember",value = "记住我",defaultValue = "false",dataType = "Boolean",paramType = "query")
     })
-    public ResultData loginTest(String loginName,String password){
+    public ResultData loginTest(String loginName, String password, @RequestParam(defaultValue = "false")Boolean isRemember){
         try {
             // 创建shiro需要的token
             UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginName, password.toCharArray());
             Subject current=SecurityUtils.getSubject();
-//            usernamePasswordToken.setRememberMe(true);// 记住
+            usernamePasswordToken.setRememberMe(isRemember);// 记住
             try {
                 logger.info("开始验证["+loginName+"]");
                 current.login(usernamePasswordToken);
@@ -79,7 +81,7 @@ public class LoginController {
             }
             return null;
         } catch (Exception e) {
-            return ResultData.error("登陆时候发生异常," + e.getMessage());
+            return ResultData.error("登陆时候发生异常,请重新登陆");
         }
     }
 

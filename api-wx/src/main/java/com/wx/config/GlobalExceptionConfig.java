@@ -14,6 +14,6 @@ public class GlobalExceptionConfig {
     @ResponseBody
     @ExceptionHandler(value = UnauthorizedException.class)
     public ModelAndView unauthorizedException(){
-          return new ModelAndView("unAuth");
+          return new ModelAndView("/unAuth");
     }
 }

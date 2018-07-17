@@ -1,6 +1,7 @@
 package com.wx.controller;
 
 import com.util.spring.resultInfo.ResultData;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping
 @RestController
 public class ExceptionController {
-    @RequestMapping("/unAuth")
+    @GetMapping("/unAuth")
     public ResultData unAuth(){
         ResultData resultData=new ResultData();
         resultData.setCode(401);
