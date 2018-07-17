@@ -1,7 +1,6 @@
 package com.wx.controller;
 
 import com.util.spring.resultInfo.ResultData;
-import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ExceptionController {
     @RequestMapping("/unAuth")
     public ResultData unAuth(){
-        throw new UnauthorizedException();
+        ResultData resultData=new ResultData();
+        resultData.setCode(401);
+        resultData.setResult("用户未拥有此权限");
+        return resultData;
     }
 }
