@@ -53,7 +53,7 @@ public class UserController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "account",value = "账号",paramType = "query",dataType = "String"),
             @ApiImplicitParam(name = "password",value = "密码",paramType = "query",dataType = "String"),
-            @ApiImplicitParam(name = "remember",value = "是否记住我",paramType = "query",dataType = "Boolean")
+            @ApiImplicitParam(name = "remember",value = "是否记住我",defaultValue = "false",paramType = "query",dataType = "Boolean")
     })
     public ResultData login(String account, String password, Boolean remember, @ApiIgnore RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response){
         UsernamePasswordToken token = new UsernamePasswordToken(account,password,remember);

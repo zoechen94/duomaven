@@ -1,6 +1,9 @@
 package com.zoe.entity;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private static final long serialVersionUID = 7651940984107053385L;
     private Long id;
 
     private String password;

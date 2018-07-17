@@ -13,6 +13,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -124,7 +125,7 @@ public class SysBasicController {
         return ResultData.success(sysUserService.selectByAccount(account));
     }
 
-
+    @Cacheable(value="api-new", key="'selectAll'")
     @RequiresRoles(value = {"管理员","超级管-理员"},logical = Logical.OR)
     @RequiresUser
     @ApiOperation("查询所有用户")
@@ -135,6 +136,7 @@ public class SysBasicController {
     })
     public ResultData selectAll(@RequestParam(defaultValue = "1") int page,
                                 @RequestParam(defaultValue = "10") int size){
+        System.out.println("selectAll-查询数据库");
         return ResultData.success(sysUserService.getAll(page,size));
     }
 }

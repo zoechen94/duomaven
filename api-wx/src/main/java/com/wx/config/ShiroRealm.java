@@ -78,9 +78,10 @@ public class ShiroRealm extends AuthorizingRealm {
             UserVO userVO=sysUserService.selectByAccount(loginName);
             if(userVO!=null){ //登陆的主要信息，可以是一个实体类的对象，但该实体类的对象一定是根据token的username查询得到的
                Object principal=token.getPrincipal();
-               //创建shiro的用户认证对象
+               //创建shiro的用户认证对象,如果成功就返回
                 //注意该对象的密码将会传递至后续步骤与前面登陆的Subject的密码进行比对
                 SimpleAuthenticationInfo authenticationInfo=new SimpleAuthenticationInfo(principal,token.getPassword(),getName());
+                //getName就是返回一个唯一的Realm名字
                 return authenticationInfo;
             }
         }

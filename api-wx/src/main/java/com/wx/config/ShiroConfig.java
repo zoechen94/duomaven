@@ -76,7 +76,7 @@ public class ShiroConfig {
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
         credentialsMatcher.setHashAlgorithmName("MD5");
-        credentialsMatcher.setHashIterations(1);
+        credentialsMatcher.setHashIterations(2);
         credentialsMatcher.setStoredCredentialsHexEncoded(true);
         return credentialsMatcher;
     }
@@ -89,7 +89,7 @@ public class ShiroConfig {
     @DependsOn("lifecycleBeanPostProcessor")
     public ShiroRealm shiroRealm() {
         ShiroRealm realm = new ShiroRealm();
-//        realm.setCredentialsMatcher(hashedCredentialsMatcher());
+        realm.setCredentialsMatcher(hashedCredentialsMatcher());
         realm.setCacheManager(shiroRedisCacheManager());//shiroEhCacheManager()
         return realm;
     }
@@ -104,10 +104,6 @@ public class ShiroConfig {
 //        return new EhCacheManager();
 //    }
 
-    /**
-     * SecurityManager，权限管理，这个类组合了登陆，登出，权限，session的处理，是个比较重要的类。
-     * //
-     */
 
     @Bean
     public SimpleCookie rememberMeCookie(){
@@ -166,31 +162,31 @@ public class ShiroConfig {
         filters.put("/swagger-resources/**","anon");
         filters.put("/v2/**","anon");
         filters.put("/doc.html","anon");
-
+        filters.put("/logout", "logout");//退出，具体的shiro已经为我们实现
         //配置不会被拦截的链接，顺序判断 anon所有url都可以匿名访问
         filters.put("/static/**", "anon");
 //        filters.put("/sys/findByAccount","perms[test3]");
+        filters.put("/permission/**","roles[管理员]");
         filters.put("/test","anon");
+        filters.put("/**", "authc");
         //未授权页面
         shiroFilterFactoryBean.setUnauthorizedUrl("/unAuth");
-        filters.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filters);
         System.out.println("\nShiroConfiguration.shirFilter结束\n");
         return shiroFilterFactoryBean;
     }
 
-
     /**
-     * AuthorizationAttributeSourceAdvisor，shiro里实现的Advisor类，
-     * 内部使用AopAllianceAnnotationsAuthorizingMethodInterceptor来拦截用以下注解的方法。
+     *  开启shiro aop注解支持.
+     *  使用代理方式;所以需要开启代码支持;
+     * @return
      */
     @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor() {
-        AuthorizationAttributeSourceAdvisor aASA = new AuthorizationAttributeSourceAdvisor();
-        aASA.setSecurityManager(securityManager());
-        return aASA;
+    public AuthorizationAttributeSourceAdvisor getAuthorizationAttributeSourceAdvisor(){
+        AuthorizationAttributeSourceAdvisor aasa = new AuthorizationAttributeSourceAdvisor();
+        aasa.setSecurityManager(securityManager());
+        return aasa;
     }
-
 
 
 }
