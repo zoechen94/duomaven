@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
  * Created by 陈亚兰 on 2018/6/12.
  */
 @SpringBootApplication
-@MapperScan(basePackages ="com.zoe.mapper")
+@MapperScan(basePackages ={"com.zoe.mapper","com.zoe.tkmapper"})
 @ComponentScan(basePackages = {"com.zoe.*"})
 public class ApiApplication {
     public static void main(String[] args){

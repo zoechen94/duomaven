@@ -89,7 +89,7 @@ public class ShiroConfig {
     @DependsOn("lifecycleBeanPostProcessor")
     public ShiroRealm shiroRealm() {
         ShiroRealm realm = new ShiroRealm();
-        realm.setCredentialsMatcher(hashedCredentialsMatcher());
+//        realm.setCredentialsMatcher(hashedCredentialsMatcher());
         realm.setCacheManager(shiroRedisCacheManager());//shiroEhCacheManager()
         return realm;
     }

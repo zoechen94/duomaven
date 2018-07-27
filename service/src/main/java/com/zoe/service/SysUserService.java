@@ -10,4 +10,7 @@ import com.zoe.entity.vo.UserVO;
 public interface SysUserService {
     UserVO selectByAccount(String account);
     PageInfo<User> getAll(int page,int size);
+    User selectTkMapper(String username);
+    int selectNum();
+    PageInfo<User> getAllTk(int page,int size);
 }

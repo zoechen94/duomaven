@@ -1,11 +1,11 @@
 package com.zoe.controller;
 
+import com.util.spring.resultInfo.ResultData;
 import com.zoe.entity.SysPermission;
 import com.zoe.entity.SysRole;
 import com.zoe.entity.SysRolePermission;
 import com.zoe.entity.SysUserRole;
 import com.zoe.service.*;
-import com.util.spring.resultInfo.ResultData;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -13,8 +13,10 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
@@ -125,7 +127,7 @@ public class SysBasicController {
         return ResultData.success(sysUserService.selectByAccount(account));
     }
 
-    @Cacheable(value="api-new", key="'selectAll'")
+
     @RequiresRoles(value = {"管理员","超级管-理员"},logical = Logical.OR)
     @RequiresUser
     @ApiOperation("查询所有用户")
@@ -134,8 +136,7 @@ public class SysBasicController {
             @ApiImplicitParam(name = "page",value = "当前页数",defaultValue = "1",dataType = "Integer",paramType = "query"),
             @ApiImplicitParam(name = "size",value = "每页个数",defaultValue = "10",dataType = "Integer",paramType = "query")
     })
-    public ResultData selectAll(@RequestParam(defaultValue = "1") int page,
-                                @RequestParam(defaultValue = "10") int size){
+    public ResultData selectAll(int page, int size){
         System.out.println("selectAll-查询数据库");
         return ResultData.success(sysUserService.getAll(page,size));
     }

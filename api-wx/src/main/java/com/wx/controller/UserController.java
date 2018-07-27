@@ -1,11 +1,15 @@
 package com.wx.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.util.spring.resultInfo.ResultData;
 import com.util.spring.utils.DateUtil;
 import com.util.spring.utils.HttpUtils;
 import com.util.spring.utils.PassWordUtils;
 import com.util.spring.utils.VerifyCodeUtils;
+import com.zoe.entity.User;
+import com.zoe.service.SysUserService;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,6 +54,9 @@ public class UserController {
     @Autowired
     private RedisTemplate<String,String> redisTemplate;
 
+    @Autowired
+    private SysUserService userService;
+
     @ApiOperation(value = "短信验证码")
     @PostMapping
     @ApiImplicitParam(name = "iphone",value = "手机号",defaultValue = "17374707239",paramType = "query",dataType = "String")
@@ -89,5 +96,40 @@ public class UserController {
         redisTemplate.opsForValue().set("verifyCode",verifyCode);
         int w=100,h=30;
         VerifyCodeUtils.outputImage(w,h,response.getOutputStream(),verifyCode);
+    }
+
+    @ApiOperation(value = "根据用户名查询用户--真查")
+    @GetMapping("/getByUserName")
+    @ApiImplicitParam(name = "username",value = "用户名",defaultValue = "路人",dataType = "String",paramType = "query")
+    public Object getUser(String username){
+        User user=userService.selectTkMapper(username);
+        JSONObject json=new JSONObject();
+        json.put("code",200);
+        json.put("result",user);
+        json.put("message","success");
+        json.put("num",userService.selectNum());
+        return json;
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="page",value = "页面",defaultValue = "1",dataType = "Integer",paramType = "query"),
+            @ApiImplicitParam(name = "size",value = "个数",defaultValue = "10",dataType = "Integer",paramType = "query")
+    })
+    @GetMapping("/getAllTk")
+    @ApiOperation(value = "得到所有用户Tk")
+    public ResultData getAllUserTk(int page,int size){
+        return ResultData.success(userService.getAllTk(page,size));
+    }
+
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="page",value = "页面",defaultValue = "1",dataType = "Integer",paramType = "query"),
+            @ApiImplicitParam(name = "size",value = "个数",defaultValue = "10",dataType = "Integer",paramType = "query")
+    })
+    @GetMapping("/getAll")
+    @ApiOperation(value = "得到所有用户Tk")
+    public ResultData getAllUser(int page,int size){
+        System.out.println("tk:---page:"+page+"\tsize:"+size);
+        return ResultData.success(userService.getAll(page,size));
     }
 }

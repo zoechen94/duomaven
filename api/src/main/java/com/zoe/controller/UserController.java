@@ -1,12 +1,13 @@
 package com.zoe.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.util.spring.utils.*;
+import com.zoe.entity.User;
 import com.zoe.entity.redis.UserToken;
 import com.zoe.entity.vo.UserVO;
 import com.zoe.service.SysUserService;
 import com.zoe.service.redis.UserTokenService;
 import com.util.spring.resultInfo.ResultData;
-import com.util.spring.utils.CookieUtils;
-import com.util.spring.utils.PassWordUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -19,18 +20,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -47,7 +46,85 @@ public class UserController {
     @Autowired
     private SysUserService sysUserService;
     @Value("${spring.redis.timeout}")
+    private int redisTimeout;
+
+    @Value("${base.url}")
+    private String url;
+
+    @Value("${account.sid}")
+    private String account;
+
+    @Value("${auth.token}")
+    private String token;
+
+    @Value("${resp.data.type}")
+    private String type;
+
+    @Value("${sms.timeout}")
     private int timeout;
+
+    @Value("${sms.content}")
+    private String content;
+
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
+
+    @Autowired
+    private SysUserService userService;
+
+    @ApiOperation(value = "短信验证码")
+    @PostMapping
+    @ApiImplicitParam(name = "iphone",value = "手机号",defaultValue = "17374707239",paramType = "query",dataType = "String")
+    public ResultData sendSms(String iphone) throws IOException {
+        Map map=new HashMap<>();
+        map.put("accountSid",account);
+        int random= (int) ((Math.random()*9+1)*100000);
+        content= String.format(content,random,5);
+        redisTemplate.opsForValue().set(iphone,random+"",timeout,TimeUnit.SECONDS);//把验证码放在redis里存储
+        map.put("smsContent", content);
+        String timeStamp=DateUtil.date2StringNoKong(new Date());
+        map.put("timestamp",timeStamp);
+        map.put("sig",PassWordUtils.md5(account,token,timeStamp));
+        map.put("to",iphone);
+        map.put("respDataType",type);
+        Object abc=HttpUtils.post(url, (Map<String, String>) map);
+        return ResultData.success(abc);
+    }
+
+    @GetMapping
+    @ApiImplicitParam(name = "iphone",value = "手机号",defaultValue = "17374707239",dataType = "String",paramType = "query")
+    public ResultData get(String iphone){
+        if(redisTemplate.opsForValue().get(iphone)==null){
+            return ResultData.success("已过期");
+        }
+        return ResultData.success(redisTemplate.opsForValue().get(iphone));
+    }
+
+    @GetMapping("/verifyCode")
+    public void generateVerification(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Pragma","No-cache");
+        response.setHeader("Cache-Control","no-cache");
+        response.setDateHeader("Expires",0);
+        response.setContentType("image/jpeg");
+        //生成随机字符串
+        String verifyCode=VerifyCodeUtils.generateVerifyCode(4);
+        redisTemplate.opsForValue().set("verifyCode",verifyCode);
+        int w=100,h=30;
+        VerifyCodeUtils.outputImage(w,h,response.getOutputStream(),verifyCode);
+    }
+
+    @ApiOperation(value = "根据用户名查询用户--真查")
+    @GetMapping("/getByUserName")
+    @ApiImplicitParam(name = "username",value = "用户名",defaultValue = "路人",dataType = "String",paramType = "query")
+    public Object getUser(String username){
+        User user=userService.selectTkMapper(username);
+        JSONObject json=new JSONObject();
+        json.put("code",200);
+        json.put("result",user);
+        json.put("message","success");
+        json.put("num",userService.selectNum());
+        return json;
+    }
     @ApiOperation("登陆")
     @PostMapping("/login")
     @ApiImplicitParams({
@@ -87,8 +164,8 @@ public class UserController {
             UserVO userVO=sysUserService.selectByAccount(account);
             String salt=userVO.getSalt();
             String tokenLing=PassWordUtils.md5PassWord(password,salt);
-            response.addCookie(CookieUtils.getCookie("account",account,timeout,"/",false));
-            response.addCookie(CookieUtils.getCookie("token",tokenLing,timeout,"/",false));
+            response.addCookie(CookieUtils.getCookie("account",account,redisTimeout,"/",false));
+            response.addCookie(CookieUtils.getCookie("token",tokenLing,redisTimeout,"/",false));
 
             Set<String> sysPermissions=new HashSet<>();
             userVO.getSysPermissions().forEach(n->{
