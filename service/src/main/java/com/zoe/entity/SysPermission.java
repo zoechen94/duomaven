@@ -1,7 +1,4 @@
 package com.zoe.entity;
-
-import com.oracle.webservices.internal.api.databinding.DatabindingMode;
-
 import java.io.Serializable;
 
 public class SysPermission implements Serializable {
