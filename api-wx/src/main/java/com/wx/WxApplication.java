@@ -14,7 +14,7 @@ import java.util.Properties;
  **/
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.wx.*","com.zoe.*"})
-@MapperScan(basePackages ={"com.zoe.mapper","com.zoe.tkmapper"})
+@MapperScan(basePackages ={"com.zoe.mapper","com.zoe.tkmapper","com.zoe.dao"})
 public class WxApplication {
     @Bean
     public PageHelper pageHelper() {
