@@ -1,5 +1,7 @@
 package com.api.interceptor;
 
+import com.alibaba.fastjson.JSON;
+import com.util.spring.resultInfo.ResultData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -28,7 +30,9 @@ public class AccessTokenInterceptor extends HandlerInterceptorAdapter {
         }
         if(!flag){
             response.setStatus(HttpStatus.FORBIDDEN.value());
-            response.getWriter().append("accessToken Error");
+            Object r = ResultData.error("错了");
+            String json = JSON.toJSONString(r);
+            response.getWriter().write(json);
         }
         return flag;
     }
