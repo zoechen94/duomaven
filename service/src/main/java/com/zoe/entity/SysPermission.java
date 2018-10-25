@@ -1,5 +1,4 @@
 package com.zoe.entity;
-
 import java.io.Serializable;
 
 public class SysPermission implements Serializable {
