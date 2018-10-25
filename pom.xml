@@ -15,6 +15,7 @@
         <module>api</module>
         <module>service</module>
         <module>api-wx</module>
+        <module>api-con</module>
     </modules>
     <!-- maven依赖-->
     <dependencyManagement>
