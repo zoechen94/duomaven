@@ -1,7 +1,9 @@
 package com.api.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.api.util.CurrentThreadUserUtil;
 import com.util.spring.resultInfo.ResultData;
+import com.zoe.entity.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -30,10 +32,17 @@ public class AccessTokenInterceptor extends HandlerInterceptorAdapter {
         }
         if(!flag){
             response.setStatus(HttpStatus.FORBIDDEN.value());
-            Object r = ResultData.error("错了");
+            /**
+             * 设置utf-8解决中文乱码
+             */
+            response.setHeader("Content-type", "text/html;charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            Object r = ResultData.error("登录失效");
             String json = JSON.toJSONString(r);
             response.getWriter().write(json);
         }
+        UserVO userVO= (UserVO) request.getSession().getAttribute("user");
+        CurrentThreadUserUtil.add(userVO);
         return flag;
     }
 }
