@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 public class TestAnnotation {
     public static void main(String[] args) throws NoSuchFieldException {
        Field field= TestDO.class.getDeclaredField("name");
-       Annotation annotation=  field.getAnnotation(MyInfoAnnotation.class);
+        MyInfoAnnotation annotation=  field.getAnnotation(MyInfoAnnotation.class);
        if(annotation!=null){
            System.out.println("field-annotation:"+((MyInfoAnnotation) annotation).value());
        }

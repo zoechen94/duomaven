@@ -21,6 +21,7 @@ public class LoginController {
         user.setAccount("test");
         user.setUsername("测试用户");
         request.getSession().setAttribute("user",user);
+
         return ResultData.success("登录过了");
     }
 }
