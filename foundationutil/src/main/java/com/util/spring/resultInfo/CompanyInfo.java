@@ -2,7 +2,8 @@ package com.util.spring.resultInfo;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
-import lombok.Value;
+
+import java.util.Date;
 
 /**
  * Created by 陈亚兰 on 2018/6/13.
@@ -20,4 +21,5 @@ public class CompanyInfo {
     private String Timestamp;
     private String url;
     private String content;
+    private Date date;
 }
