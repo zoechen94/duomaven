@@ -76,7 +76,7 @@ public class ExcelExportUtil<T> {
         companyInfo.setContent("dj");
         companyInfo.setId("3");
         companyInfo.setName("第一个");
-        companyInfos.add(new CompanyInfo());
+        companyInfos.add(companyInfo);
         CompanyInfo companyInfo1=new CompanyInfo();
         companyInfo1.setName("第二个");
         companyInfo1.setId("4");
