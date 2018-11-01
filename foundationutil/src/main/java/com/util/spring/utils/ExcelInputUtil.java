@@ -35,9 +35,10 @@ public class ExcelInputUtil {
         Workbook workbook=null;
         if (filePath==null||filePath.isEmpty()){
             is=file.getInputStream();
-            if(file.getOriginalFilename().endsWith(XLS)){
+            String fileName=file.getOriginalFilename().toLowerCase();
+            if(fileName.endsWith(XLS)){
                 workbook=new HSSFWorkbook(is);
-            }else if(file.getOriginalFilename().endsWith(XLSX)){
+            }else if(fileName.endsWith(XLSX)){
                 workbook=new XSSFWorkbook(is);
             }
         }else if(file.isEmpty()){
@@ -57,6 +58,7 @@ public class ExcelInputUtil {
      * @return
      */
     public static boolean checkIfExcel(String fileName){
+        fileName=fileName.toLowerCase();
         if(!(fileName.endsWith(XLS)||fileName.endsWith(XLSX))){
             return false;
         }else {
@@ -64,6 +66,12 @@ public class ExcelInputUtil {
         }
     }
 
+    /**
+     * 读取excel
+     * @param filePath
+     * @param file
+     * @throws IOException
+     */
     public static void readExcel(String filePath,MultipartFile file) throws IOException {
         Workbook workbook=getWorkbook(filePath,file);
         for(int sheetNum=0;sheetNum<workbook.getNumberOfSheets();sheetNum++){
