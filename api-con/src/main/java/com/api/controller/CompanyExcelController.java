@@ -4,11 +4,11 @@ import com.util.spring.resultInfo.CompanyInfo;
 import com.util.spring.resultInfo.ResultData;
 import com.util.spring.utils.DateUtil;
 import com.util.spring.utils.ExcelExportUtil;
+import com.util.spring.utils.ExcelInputUtil;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,5 +64,16 @@ public class CompanyExcelController {
         out.flush();
         out.close();
         return ResultData.success("输出成功");
+    }
+
+
+    @ApiOperation("读入文件")
+    @PostMapping("/readExcel.do")
+    public ResultData insert(MultipartFile file) throws IOException {
+        if(!ExcelInputUtil.checkIfExcel(file.getOriginalFilename())){
+            return ResultData.error("不是excel文件");
+        }
+        ExcelInputUtil.readExcel(null,file);
+        return ResultData.success("读入成功");
     }
 }
