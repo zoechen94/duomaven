@@ -3,6 +3,7 @@ maven多模块项目
 主要是搭建基础框架，目前还没有完成权限认证。
 6.20 shiro框架搭建完毕
 
+注意务必先把file下ojdbc解压放在你的maven库中的com下
 
 shiro注解
 //属于user角色
